@@ -50,7 +50,7 @@ If you need to do other stuffs after uploading a picture, you can redefine the r
 
   class WPicturesController < Wysiwyg::PicturesController
     def render_success
-      # custom code using @picture
+      # custom code using @picture and @element_id
     end
   end
 
