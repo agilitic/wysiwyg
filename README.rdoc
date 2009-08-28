@@ -1,5 +1,6 @@
 = Wysiwyg
 
+Simple WYSIWYG plugin with image upload support.
 Based on LWRTE and Ocupload.
 
 == Dependencies
