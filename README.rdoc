@@ -59,4 +59,4 @@ If you need to do other stuffs after uploading a picture, you can redefine the r
 - Only works with one instance by page.
 - The uploaded pictures are stored in /public/system/wysiwyg_pictures/.
 
-Copyright (c) 2009 Aurélien Malisart, agilitic, released under the GPL license
+Copyright (c) 2009 Aurélien Malisart & François Stéphany, agilitic, released under the GPL license
