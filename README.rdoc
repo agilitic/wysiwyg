@@ -1,0 +1,25 @@
+= Wysiwyg
+
+Based on LWRTE and Ocupload.
+
+== Dependencies
+
+Rails plugins
+- paperclip
+- responds_to_parent
+
+
+= Installation
+
+Install the plugin:
+
+  script/plugin install
+
+Copy all the needed assets to public/:
+
+  rake wysiwyg:copy_assets
+
+= Usage:
+
+
+Copyright (c) 2009 Aurélien Malisart, agilitic, released under the GPL license
