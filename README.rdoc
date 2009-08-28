@@ -29,7 +29,7 @@ Include the JS and CSS into your views:
   <%= stylesheet_link_tag '../wysiwyg/wysiwyg' %>
   <%= javascript_include_tag '../wysiwyg/wysiwyg' %>
 
-Create a new controller which extends ours:
+Create a new controller which extends ours to handle the picture uploads:
 
   class WPicturesController < Wysiwyg::PicturesController
   end
@@ -38,7 +38,7 @@ Add an associated route:
 
   map.resources :w_pictures
 
-Transform a textarea into a WYSIWYG:
+To transform a textarea into a WYSIWYG:
 
   $(document).ready(function(){
     wysiwygSetup('page_content', '/w_pictures', 825);
