@@ -4,6 +4,9 @@ Based on LWRTE and Ocupload.
 
 == Dependencies
 
+Javascript:
+- jQuery
+
 Rails plugins
 - paperclip
 - responds_to_parent
@@ -13,13 +16,36 @@ Rails plugins
 
 Install the plugin:
 
-  script/plugin install
+  script/plugin install git://github.com/agilitic/wysiwyg.git
 
 Copy all the needed assets to public/:
 
   rake wysiwyg:copy_assets
 
-= Usage:
+= Usage
 
+Include the JS and CSS into your views:
+
+  <%= stylesheet_link_tag '../wysiwyg/wysiwyg' %>
+  <%= javascript_include_tag '../wysiwyg/wysiwyg' %>
+
+Create a new controller which extends ours:
+
+  class WPicturesController < Wysiwyg::PicturesController
+  end
+
+Add an associated route:
+
+  map.resources :w_pictures
+
+Transform a textarea into a WYSIWYG:
+
+  $(document).ready(function(){
+    wysiwygSetup('page_content', '/w_pictures', 825);
+  });
+
+= Notes
+
+- Only works with one instance by page.
 
 Copyright (c) 2009 Aurélien Malisart, agilitic, released under the GPL license
