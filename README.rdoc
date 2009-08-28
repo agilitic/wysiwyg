@@ -44,8 +44,19 @@ To transform a textarea into a WYSIWYG:
     wysiwygSetup('page_content', '/w_pictures', 825);
   });
 
+= Advanced
+
+If you need to do other stuffs after uploading a picture, you can redefine the render_success method:
+
+  class WPicturesController < Wysiwyg::PicturesController
+    def render_success
+      # custom code using @picture
+    end
+  end
+
 = Notes
 
 - Only works with one instance by page.
+- The uploaded pictures are stored in /public/system/wysiwyg_pictures/.
 
 Copyright (c) 2009 Aurélien Malisart, agilitic, released under the GPL license
