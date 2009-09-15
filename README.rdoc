@@ -20,45 +20,38 @@ Install the plugin:
 
   script/plugin install git://github.com/agilitic/wysiwyg.git
 
-Copy all the needed assets to public/:
+Run the generator:
+  script/generate w_picture
 
-  rake wysiwyg:copy_assets
+The generator will create 
+- a controller: w_pictures_controller
+- a w_picture route
+- a model: w_pictures
+- a migration file
+- a wysiwyg directory in the public/ folder
 
 = Usage
 
+Tweak the w_picture model to suit your need (e.g., paperclip params).
+
 Include the JS and CSS into your views:
 
-  <%= stylesheet_link_tag '../wysiwyg/wysiwyg' %>
-  <%= javascript_include_tag '../wysiwyg/wysiwyg' %>
-
-Create a new controller which extends ours to handle the picture uploads:
-
-  class WPicturesController < Wysiwyg::PicturesController
-  end
-
-Add an associated route:
-
-  map.resources :w_pictures
+  <%= stylesheet_link_tag '/wysiwyg/wysiwyg' %>
+  <%= javascript_include_tag '/wysiwyg/wysiwyg' %>
 
 To transform a textarea into a WYSIWYG:
 
   $(document).ready(function(){
-    wysiwygSetup('page_content', '/w_pictures', 825);
+    wysiwygSetup('page_content', '/w_pictures', 842);
   });
 
-= Advanced
-
-If you need to do other stuffs after uploading a picture, you can redefine the render_success method:
-
-  class WPicturesController < Wysiwyg::PicturesController
-    def render_success
-      # custom code using @picture and @element_id
-    end
-  end
+First param: the DOM id of the textarea to decorate.
+Second param: the path. If you use the generated controller, use /w_pictures
+Third param: The width of the editor.
 
 = Notes
 
 - Only works with one instance by page.
-- The uploaded pictures are stored in /public/system/wysiwyg_pictures/.
+- By default, the uploaded pictures are stored in /public/system/wysiwyg_pictures/.
 
 Copyright (c) 2009 Aurélien Malisart & François Stéphany, agilitic, released under the MIT license
