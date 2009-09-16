@@ -1,8 +1,9 @@
 = Wysiwyg
 
 Simple WYSIWYG plugin with image upload support.
-Based on LWRTE (http://code.google.com/p/lwrte/) 
-and ocupload (http://code.google.com/p/ocupload/).
+Based on LWRTE (http://code.google.com/p/lwrte/), 
+ocupload (http://code.google.com/p/ocupload/)
+and jquery.blockUI (http://malsup.com/jquery/block/)
 
 == Dependencies
 

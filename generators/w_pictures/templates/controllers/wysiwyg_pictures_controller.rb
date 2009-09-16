@@ -2,7 +2,7 @@ class WysiwygPicturesController < ActionController::Base
   skip_before_filter :verify_authenticity_token
 
   def create
-    @picture = initialize_picture
+    @picture = WysiwygPicture.new(:file => params[:file])
     @element_id = params[:element_id]
 
     respond_to do |format|      
@@ -10,19 +10,22 @@ class WysiwygPicturesController < ActionController::Base
         if @picture.save
           render_success
         else
-          render :nothing => true
+          render_failure
         end
       end
     end
   end
 
-  def initialize_picture
-    Wysiwyg::Picture.new(:file => params[:file])
-  end
-  
   def render_success
     responds_to_parent do
-      render :js => "wysiwyg.#{@element_id}.editor_cmd('insertImage', '#{@picture.file.url}');"
+      render :js => "wysiwyg.#{@element_id}.editor_cmd('insertImage', '#{@picture.file.url}'); $.unblockUI();"
+    end
+  end
+
+  def render_failure
+    responds_to_parent do
+      render :js => "alert('Upload Failed.'); $.unblockUI();"
     end
   end
 end
+
