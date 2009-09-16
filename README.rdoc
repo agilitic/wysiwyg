@@ -42,7 +42,7 @@ Include the JS and CSS into your views:
 To transform a textarea into a WYSIWYG:
 
   $(document).ready(function(){
-    wysiwygSetup('page_content', '/w_pictures', 842);
+    wysiwygSetup('page_content', '/wysiwyg_pictures', 842);
   });
 
 First param: the DOM id of the textarea to decorate.
