@@ -12,11 +12,11 @@ class WPicturesGenerator < Rails::Generator::Base
       m.file "public/images/rte_icons.gif", "public/wysiwyg/images/rte_icons.gif"
       
       # controller & model
-      m.file "controllers/w_pictures_controller.rb", "app/controllers/w_pictures_controller.rb"
-      m.file "models/w_pictures.rb", "app/models/w_pictures.rb"
+      m.file "controllers/wysiwyg_pictures_controller.rb", "app/controllers/wysiwyg_pictures_controller.rb"
+      m.file "models/wysiwyg_picture.rb", "app/models/wysiwyg_picture.rb"
       
       # routes & migrations
-      m.route_resources :w_pictures
+      m.route_resources :wysiwyg_pictures
       m.migration_template "create_wysiwyg_pictures.rb", "db/migrate"             
     end
   end
