@@ -1,8 +1,8 @@
 = Wysiwyg
 
 Simple WYSIWYG plugin with image upload support.
-Based on LWRTE (http://code.google.com/p/lwrte/) 
-and ocupload (http://code.google.com/p/ocupload/).
+Based on [LWRTE](http://code.google.com/p/lwrte/) 
+and [ocupload](http://code.google.com/p/ocupload/).
 
 == Dependencies
 
@@ -57,10 +57,10 @@ To transform a textarea into a WYSIWYG:
   });
 
 Options:
-textarea_id: the DOM id of the textarea to decorate.
-light_editor: display a wysiwyg with minimal user control (bold,underline,...)
-picture_action_url: Pictures uploaded by the user will be sent at this paht. If you use the generated controller, use /wysiwyg_pictures
-width: the width of the editor (default: 600px).
+* textarea_id: the DOM id of the textarea to decorate.
+* light_editor: display a wysiwyg with minimal user control (bold,underline,...)
+* picture_action_url: Pictures uploaded by the user will be sent at this paht. If you use the generated controller, use /wysiwyg_pictures
+* width: the width of the editor (default: 600px).
 
 = Notes
 
