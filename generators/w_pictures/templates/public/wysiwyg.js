@@ -19,8 +19,6 @@ jQuery.fn.rte = function(options, editors) {
 }
 
 var lwRTE = function (textarea, options) {
-	this.image_action_url = options.image_action_url || '';
-	this.image_error_message = options.image_error_message || '';
 	this.element_id = options.element_id;
 	this.css		= [];
 	this.css_class	= options.frame_class || '';
@@ -182,6 +180,7 @@ lwRTE.prototype.disable_design_mode = function(submit) {
 lwRTE.prototype.toolbar_click = function(obj, control) {
 	var fn = control.exec;
 	var args = control.args || [];
+	
 	var is_select = (obj.tagName.toUpperCase() == 'SELECT');
 	
 	$('.rte-panel', this.get_toolbar()).remove();
@@ -245,32 +244,6 @@ lwRTE.prototype.create_toolbar = function(controls) {
 		}
 
 		$("ul",tb).append(li);
-		
-		// HACK
-		if(key == "image") {
-			obj.unbind("click");
-			var up = obj.upload({
-		       	name: 'file',
-				enctype: 'multipart/form-data',
-				params : {},
-				action: self.image_action_url,
-				element_id: this.element_id, // aurels
-				autoSubmit: false,
-				onSelect: function() {
-					for(var i=0; i<10000; i++) {}
-					var file = $(".file").attr('value')
-					// alert("file:" + file)
-					var ext = (/[.]/.exec(file)) ? /[^.]+$/.exec(file.toLowerCase()) : '';
-					if(!(ext && /^(jpg|png|jpeg)$/.test(ext))){
-						alert(self.image_error_message);
-						return;
-					}
-					$.blockUI();					
-					this.submit();
-				}
-			});
-		}
-		// END HACK
 	}
 
 	$('.enable', tb).click(function() {
@@ -492,6 +465,15 @@ lwRTE.prototype.selection_replace_with = function(html) {
  */
 var rte_tag		= '-rte-tmp-tag-';
 
+/* light toolbar */
+var rte_light_toolbar = {
+	s1				: {separator: true},
+	bold			: {command: 'bold', tags:['b', 'strong']},
+	italic			: {command: 'italic', tags:['i', 'em']},
+	strikeThrough	: {command: 'strikethrough', tags: ['s', 'strike'] },
+	underline		: {command: 'underline', tags: ['u']},
+};
+
 var	rte_toolbar = {
 	s1				: {separator: true},
 	bold			: {command: 'bold', tags:['b', 'strong']},
@@ -531,7 +513,6 @@ var	rte_toolbar = {
 </select>\
 	', tags: ['font']},
 	color			: {exec: lwrte_color},
-	image			: {exec: lwrte_image, tags: ['img'] },
 	link			: {exec: lwrte_link, tags: ['a'] },
 	unlink			: {command: 'unlink'},
 	s8				: {separator : true },
@@ -717,10 +698,6 @@ function lwrte_color(){
 	}
 }
 
-function lwrte_image() {
-	// removed see hack in create_toolbar
-}
-
 function lwrte_unformat() {
 	this.editor_cmd('removeFormat');
 	this.editor_cmd('unlink');
@@ -783,9 +760,6 @@ function lwrte_link() {
 	 });
 }
 
-// ========================================================================
-// ========================================================================
-// ========================================================================
 /*
  * One Click Upload - jQuery Plugin
  * Copyright (c) 2008 Michael Mitchell - http://www.michaelmitchell.co.nz
@@ -814,12 +788,12 @@ function lwrte_link() {
 	
 		// A unique id so we can find our elements later
 		var id = new Date().getTime().toString().substr(8);
-		var iframeID = "iframe" + id;
+		
 		// Upload Iframe
 		var iframe = $(
 			'<iframe '+
-				'id="'+ iframeID +'" '+
-				'name="'+ iframeID + '" '+
+				'id="iframe'+id+'" '+
+				'name="iframe'+id+'"'+
 				'src="#"'+
 			'></iframe>'
 		).css({
@@ -830,10 +804,9 @@ function lwrte_link() {
 		var form = $(
 			'<form '+
 				'method="post" '+
-				'class="blopID"' +
 				'enctype="'+options.enctype+'" '+
-				'action="'+options.action+'?element_id='+options.element_id+'" '+
-				'target="'+ iframeID +'"'+
+				'action="'+options.action+'?wysiwyg_id='+options.wysiwyg_id+'" '+
+				'target="iframe'+id+'"'+
 			'></form>'
 		).css({
 			margin: 0,
@@ -842,7 +815,7 @@ function lwrte_link() {
 		
 		// File Input
 		var input = $(
-			'<input class="'+options.name+ '" ' +
+			'<input '+
 				'name="'+options.name+'" '+
 				'type="file" '+
 			'/>'
@@ -859,7 +832,7 @@ function lwrte_link() {
 		});
 	
 		// Put everything together
-		element.wrap('<div></div>'); //container
+		element.wrap('<li></li>'); //container
 
 		element.wrap(form);
 		element.wrap('<span></span>');
@@ -1001,7 +974,7 @@ function lwrte_link() {
 			// Submit the form
 			submit: function() {
 				// Do something before we upload
-				self.onSubmit();				
+				this.onSubmit();
 				// add additional paramters before sending
 				$.each(options.params, function(key, value) {
 					form.append($(
@@ -1012,13 +985,24 @@ function lwrte_link() {
 						'/>'
 					));
 				});
-				$('.blopID').submit();
+
+				// Submit the actual form.
+				// In that way, because we don't want jquery events (it fires submit event for other parent form)
+				form.get(0).submit();
+				
+				// Do something after we are finished uploading
+				iframe.unbind().load(function() {
+					// Get a response from the server in plain text
+					var myFrame = document.getElementById(iframe.attr('name'));
+					var response = $(myFrame.contentWindow.document.body).text();
+					
+					// Do something on complete
+					self.onComplete(response); //done :D
+				});
 			}
 		});
 	}
 })(jQuery);
-
-
 /*!
  * jQuery blockUI plugin
  * Version 2.26 (09-SEP-2009)
@@ -1483,18 +1467,45 @@ function sz(el, p) {
 
 })(jQuery);
 
-/*==========================================================================
-*/
 
-var wysiwyg; // useful to get the editor back.
+var wysiwyg = new Array(); // useful to get the editor back.
 
-function wysiwygSetup(id, picture_action_url, width){
-	wysiwyg = $('#' + id).rte({
-		element_id : id,
-		image_action_url : picture_action_url,
-		image_error_message: 'Bad file.',
-		width: width,
-		controls_rte: rte_toolbar,
+
+function wysiwygSetup(options){			
+	$('#' + options.textarea_id).rte({
+		element_id : options.textarea_id,
+		width: options.width || 600,
+		controls_rte: (options.light_editor ? rte_light_toolbar : rte_toolbar),
 		controls_html: html_toolbar
-	});
+	}, wysiwyg);
+		
+	if(!options.light_editor){
+		// add an image link to the wysiwyg menu bar
+		var link_id = "link_image_" + options.textarea_id;
+		var image_link = $('<a class="image" id="' + link_id + '" href="" title="image" rel="image">c</a>');
+		var content = $('iframe#' + options.textarea_id);
+		var ul_menu = content.siblings().children("ul");
+		ul_menu.append('<li class="separator"/>');
+		ul_menu.append(image_link);
+
+		$("#" + link_id ).upload({
+	       	name: 'file',
+			enctype: 'multipart/form-data',
+			params : {},
+			action: options.picture_action_url,
+			wysiwyg_id: options.textarea_id, //so that it knows which wysiwyg to update
+			autoSubmit: false,
+			onSelect: function() {
+				for(var i=0; i<10000; i++) {}
+				var file = this.filename();
+				var ext = (/[.]/.exec(file)) ? /[^.]+$/.exec(file.toLowerCase()) : '';
+				if(!(ext && /^(jpg|png|jpeg)$/.test(ext))){
+					alert("Not valid image");
+					return;
+				}
+				$.blockUI();
+				this.submit();
+			}
+		});
+	}	
 }

@@ -263,10 +263,14 @@
 	filter: alpha(opacity = 100);
 }
 
-.rte-toolbar ul li a:hover, .rte-toolbar ul li a.active {
+.rte-toolbar ul li a:hover, 
+.rte-toolbar ul li a.active,
+.rte-toolbar ul li form:hover {
 	opacity: 0.5;
 	-moz-opacity: 0.5;
 	filter: alpha(opacity = 50);
+	cursor:  auto;
+	
 }
 
 .rte-toolbar ul li a.active { 

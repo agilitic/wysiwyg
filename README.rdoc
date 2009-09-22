@@ -1,9 +1,8 @@
 = Wysiwyg
 
 Simple WYSIWYG plugin with image upload support.
-Based on LWRTE (http://code.google.com/p/lwrte/), 
-ocupload (http://code.google.com/p/ocupload/)
-and jquery.blockUI (http://malsup.com/jquery/block/)
+Based on LWRTE (http://code.google.com/p/lwrte/) 
+and ocupload (http://code.google.com/p/ocupload/).
 
 == Dependencies
 
@@ -43,16 +42,28 @@ Include the JS and CSS into your views:
 To transform a textarea into a WYSIWYG:
 
   $(document).ready(function(){
-    wysiwygSetup('page_content', '/wysiwyg_pictures', 842);
+	
+	wysiwygSetup({
+		textarea_id:'content_nl_editor',
+		picture_action_url:'/wysiwyg_pictures',
+		width:620
+	});
+	
+	wysiwygSetup({
+		textarea_id:'content_fr_editor',
+		light_editor:true
+		width:620
+	});
   });
 
-First param: the DOM id of the textarea to decorate.
-Second param: the path. If you use the generated controller, use /w_pictures
-Third param: The width of the editor.
+Options:
+textarea_id: the DOM id of the textarea to decorate.
+light_editor: display a wysiwyg with minimal user control (bold,underline,...)
+picture_action_url: Pictures uploaded by the user will be sent at this paht. If you use the generated controller, use /wysiwyg_pictures
+width: the width of the editor (default: 600px).
 
 = Notes
 
-- Only works with one instance by page.
 - By default, the uploaded pictures are stored in /public/system/wysiwyg_pictures/.
 
 Copyright (c) 2009 Aurélien Malisart & François Stéphany, agilitic, released under the MIT license
