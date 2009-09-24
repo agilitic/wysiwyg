@@ -1,12 +1,11 @@
 /* lwRTE + lwRTE.tb + occupload + blockUI -- pimped by agilitic 
-   See bottom for "wysiwygSetup(options)".
-*/
+ * See bottom for "wysiwygSetup(options)".
+ * Released under MIT License. For more information, visit: http://github.com/agilitic/wysiwyg
+ */
 
 /*
  * Lightweight RTE - jQuery Plugin, version 1.2
  * Copyright (c) 2009 Andrey Gayvoronsky - http://www.gayvoronsky.com
- * Modified by agilitic.
- *
  */
 jQuery.fn.rte = function(options, editors) {
 	if(!editors || editors.constructor != Array)
@@ -459,84 +458,6 @@ lwRTE.prototype.selection_replace_with = function(html) {
 		this.editor_cmd('delete');
 		rng.pasteHTML(html);
 	}
-};
-
-// ========================================================================
-// ========================================================================
-// ========================================================================
-/*
- * Lightweight RTE - jQuery Plugin, v1.2
- * Basic Toolbars
- * Copyright (c) 2009 Andrey Gayvoronsky - http://www.gayvoronsky.com
- */
-var rte_tag		= '-rte-tmp-tag-';
-
-/* light toolbar */
-var rte_light_toolbar = {
-	s1				: {separator: true},
-	bold			: {command: 'bold', tags:['b', 'strong']},
-	italic			: {command: 'italic', tags:['i', 'em']},
-	strikeThrough	: {command: 'strikethrough', tags: ['s', 'strike'] },
-	underline		: {command: 'underline', tags: ['u']}
-};
-
-var	rte_toolbar = {
-	s1				: {separator: true},
-	bold			: {command: 'bold', tags:['b', 'strong']},
-	italic			: {command: 'italic', tags:['i', 'em']},
-	strikeThrough	: {command: 'strikethrough', tags: ['s', 'strike'] },
-	underline		: {command: 'underline', tags: ['u']},
-	s2				: {separator: true },
-	indent			: {command: 'indent'},
-	outdent			: {command: 'outdent'},
-	s5				: {separator : true },
-	unorderedList	: {command: 'insertunorderedlist', tags: ['ul'] },
-	s6				: {separator : true },
-// 	font			: {command: 'fontname', select: '\
-// <select>\
-// 	<option value="">- font -</option>\
-// 	<option value="arial">Arial</option>\
-// 	<option value="comic sans ms">Comic Sans</option>\
-// 	<option value="courier new">Courier New</options>\
-// 	<option value="georgia">Georgia</option>\
-// 	<option value="helvetica">Helvetica</options>\
-// 	<option value="impact">Impact</option>\
-// 	<option value="times new roman">Times</options>\
-// 	<option value="trebuchet ms">Trebuchet</options>\
-// 	<option value="verdana">Verdana</options>\
-// </select>', tags: ['font']},
-	
-	heading			: {command: 'formatblock', select: '\
-<select>\
-	<option value="<p>">Normal</option>\
-	<option value="<h1>">Heading 1</option>\
-	<option value="<h2>">Heading 2</option>\
-	<option value="<h3>">Heading 3</options>\
-	<option value="<h4>">Heading 4</option>\
-</select>', tags: ['h']},
-	
-	size			: {command: 'fontsize', select: '\
-<select>\
-	<option value="">-</option>\
-	<option value="1">1 (8pt)</option>\
-	<option value="2">2 (10pt)</option>\
-	<option value="3">3 (12pt)</options>\
-	<option value="4">4 (14pt)</option>\
-	<option value="5">5 (16pt)</options>\
-	<option value="6">6 (18pt)</option>\
-	<option value="7">7 (20pt)</options>\
-</select>\
-	', tags: ['font']},
-	color			: {exec: lwrte_color},
-	link			: {exec: lwrte_link, tags: ['a'] },
-	unlink			: {command: 'unlink'},
-	s8				: {separator : true },
-	clear			: {exec: lwrte_clear}
-};
-
-var html_toolbar = {
-	s1				: {separator: true},
-	clear			: {exec: lwrte_clear}
 };
 
 /*** tag compare callbacks ***/
@@ -1482,25 +1403,112 @@ function sz(el, p) {
 
 })(jQuery);
 
-
+/*   -----------------------------------------------------------------------------*/
 var wysiwyg = new Array(); // useful to get the editor back.
+var rte_tag		= '-rte-tmp-tag-';
+var html_toolbar = {
+	s1				: {separator: true},
+	clear			: {exec: lwrte_clear}
+};
 
-/* -----------------------------------------------------------------------------
-   -----------------------------------------------------------------------------*/
-
-function wysiwygSetup(options){			
-	$('#' + options.textarea_id).rte({
-		element_id : options.textarea_id,
-		width: options.width || 600,
-		controls_rte: (options.light_editor ? rte_light_toolbar : rte_toolbar),
+/*
+	options = {
+		link_buttons : true, //shows link/unlink buttons
+		indent_buttons : true, // show indent/outdent buttons
+		itemize_buttons : true, // show itemize button
+		heading_selection : true, // show heading level dropbox
+		font_selection : true, // show font selection dropbox
+		size_selection : true, // show text size dropbox
+		color_selection : true // show choose color button
+	}
+	is equivalent to:
+	options = { all : true}
+*/
+function wysiwygSetup(w_options){
+	var rte_toolbar = {
+		clear			: {exec: lwrte_clear},
+		s1				: {separator: true},
+		bold			: {command: 'bold', tags:['b', 'strong']},
+		italic			: {command: 'italic', tags:['i', 'em']},
+		strikeThrough	: {command: 'strikethrough', tags: ['s', 'strike'] },
+		underline		: {command: 'underline', tags: ['u']}
+	};			
+	// Options
+	if(w_options.color_selection  || w_options.all) {
+		rte_toolbar.sep_color = {separator: true };		
+		rte_toolbar.color = {exec: lwrte_color};
+	}
+	if(w_options.link_buttons || w_options.all) {
+		rte_toolbar.sep_link = {separator: true };
+		rte_toolbar.link = {exec: lwrte_link, tags: ['a'] };
+		rte_toolbar.unlink	= {command: 'unlink'};
+	}
+	if(w_options.indent_buttons  || w_options.all) {
+		rte_toolbar.sep_indent = {separator: true };
+		rte_toolbar.indent = {command: 'indent'};
+		rte_toolbar.outdent	= {command: 'outdent'};
+	}	
+	if(w_options.itemize_buttons  || w_options.all) {
+		rte_toolbar.sep_itemize = {separator: true };		
+		rte_toolbar.unorderedList = {command: 'insertunorderedlist', tags: ['ul'] };
+	}
+	if(w_options.heading_selection  || w_options.all) {
+		rte_toolbar.sep_heading = {separator: true };		
+		rte_toolbar.heading = {command: 'formatblock', select: '\
+			<select>\
+				<option value="<p>">Normal</option>\
+				<option value="<h1>">Heading 1</option>\
+				<option value="<h2>">Heading 2</option>\
+				<option value="<h3>">Heading 3</option>\
+				<option value="<h4>">Heading 4</option>\
+			</select>', tags: ['h']};
+	}
+	if(w_options.font_selection  || w_options.all) {
+		rte_toolbar.font = {command: 'fontname', select: '\
+			<select>\
+				<option value="">- font -</option>\
+				<option value="arial">Arial</option>\
+				<option value="comic sans ms">Comic Sans</option>\
+				<option value="courier new">Courier New</option>\
+				<option value="georgia">Georgia</option>\
+				<option value="helvetica">Helvetica</option>\
+				<option value="impact">Impact</option>\
+				<option value="times new roman">Times</option>\
+				<option value="trebuchet ms">Trebuchet</option>\
+				<option value="verdana">Verdana</option>\
+			</select>', tags: ['font']};
+	}
+	if(w_options.size_selection  || w_options.all) {
+		rte_toolbar.sep_size = {separator: true };		
+		rte_toolbar.siez = {command: 'fontsize', select: '\
+			<select>\
+				<option value="">-</option>\
+				<option value="1">1 (8pt)</option>\
+				<option value="2">2 (10pt)</option>\
+				<option value="3">3 (12pt)</option>\
+				<option value="4">4 (14pt)</option>\
+				<option value="5">5 (16pt)</option>\
+				<option value="6">6 (18pt)</option>\
+				<option value="7">7 (20pt)</option>\
+			</select>', tags: ['font']};
+	}
+	// END OPTIONS
+	
+	// Creates the actual wysiwyg
+	$('#' + w_options.textarea_id).rte({
+		element_id : w_options.textarea_id,
+		width: w_options.width || 600,
+		controls_rte: rte_toolbar,
 		controls_html: html_toolbar
 	}, wysiwyg);
-		
-	if(options.picture_action_url){
+	
+	
+	// Image upload	
+	if(w_options.picture_action_url){
 		// add an image link to the wysiwyg menu bar
-		var link_id = "link_image_" + options.textarea_id;
+		var link_id = "link_image_" + w_options.textarea_id;
 		var image_link = $('<a class="image" id="' + link_id + '" href="" title="image" rel="image">c</a>');
-		var content = $('iframe#' + options.textarea_id);
+		var content = $('iframe#' + w_options.textarea_id);
 		var ul_menu = content.siblings().children("ul");
 		ul_menu.append('<li class="separator"/>');
 		ul_menu.append(image_link);
@@ -1509,8 +1517,8 @@ function wysiwygSetup(options){
 	       	name: 'file',
 			enctype: 'multipart/form-data',
 			params : {},
-			action: options.picture_action_url,
-			wysiwyg_id: options.textarea_id, //so that it knows which wysiwyg to update
+			action: w_options.picture_action_url,
+			wysiwyg_id: w_options.textarea_id, //so that it knows which wysiwyg to update
 			autoSubmit: false,
 			onSelect: function() {
 				for(var i=0; i<10000; i++) {}

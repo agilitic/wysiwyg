@@ -46,21 +46,37 @@ To transform a textarea into a WYSIWYG:
 	wysiwygSetup({
 		textarea_id:'content_nl_editor',
 		picture_action_url:'/wysiwyg_pictures',
+		link_buttons: true,
+		heading_selection: true;
 		width:620
 	});
 	
 	wysiwygSetup({
 		textarea_id:'content_fr_editor',
-		light_editor:true
+		all : true
 		width:620
 	});
   });
 
 Options:
 * textarea_id: the DOM id of the textarea to decorate.
-* light_editor: display a wysiwyg with minimal user control (bold,underline,...)
-* picture_action_url: pictures uploaded by the user will be sent at this path. If you use the generated controller, use /wysiwyg_pictures
 * width: the width of the editor (default: 600px).
+
+By default, a basic wysiwyg is displayed (bold, underline, italic and strikethrough).
+If you want to provide more controls to your users, you can use the following options.
+* link_buttons set it to true to show link/unlink buttons
+* indent_buttons set it to true to show indent/outdent buttons
+* itemize_buttons set it to true to show itemize button
+* heading_selection set it to true to show heading level dropbox
+* font_selection set it to true to show font selection dropbox
+* size_selection set it to true to show text size dropbox
+* color_selection set it to true to show choose color button
+
+If you want all of them, you can specify "all" (see the example above).
+
+* picture_action_url: pictures uploaded by the user will be sent at this path. If you use the generated controller, set the options to "/wysiwyg_pictures".
+
+
 
 = Notes
 
