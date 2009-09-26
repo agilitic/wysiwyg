@@ -1,4 +1,4 @@
-class Admin::WysiwygPicturesController < ActionController::Base
+class WysiwygPicturesController < ActionController::Base
   skip_before_filter :verify_authenticity_token
 
   def create

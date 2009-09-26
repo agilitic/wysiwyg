@@ -1,7 +1,6 @@
-class WPicturesGenerator < Rails::Generator::Base 
+class WysiwygGenerator < Rails::Generator::Base 
   def manifest 
     record do |m|
-      
       # assets 
       m.directory "public/wysiwyg"
       m.directory "public/wysiwyg/images"
@@ -15,14 +14,15 @@ class WPicturesGenerator < Rails::Generator::Base
       m.file "controllers/wysiwyg_pictures_controller.rb", "app/controllers/wysiwyg_pictures_controller.rb"
       m.file "models/wysiwyg_picture.rb", "app/models/wysiwyg_picture.rb"
       
-      # routes & migrations
+      # routes
       m.route_resources :wysiwyg_pictures
+      
+      # migrations
       m.migration_template "create_wysiwyg_pictures.rb", "db/migrate"             
     end
   end
   
   def file_name
-      "create_wysiwyg_pictures"
-    end
-  
+    "create_wysiwyg_pictures"
+  end
 end 
