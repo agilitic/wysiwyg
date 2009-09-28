@@ -21,7 +21,7 @@ Install the plugin:
   script/plugin install git://github.com/agilitic/wysiwyg.git
 
 Run the generator:
-  script/generate w_picture
+  script/generate wysiwyg
 
 The generator will create 
 - a controller: wysiwyg_pictures_controller
