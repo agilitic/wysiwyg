@@ -8,7 +8,7 @@ class CreateWysiwygPictures < ActiveRecord::Migration
       t.timestamps
     end
   end
-  
+
   def self.down
     drop_table :wysiwyg_pictures
   end

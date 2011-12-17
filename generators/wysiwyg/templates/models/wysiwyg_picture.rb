@@ -1,5 +1,5 @@
 class WysiwygPicture < ActiveRecord::Base
-  
+
   has_attached_file :file,
     :path => ":rails_root/public/system/wysiwyg_pictures/:id/:style.:extension",
     :url  => "/system/wysiwyg_pictures/:id/:style.:extension",

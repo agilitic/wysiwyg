@@ -1,7 +1,7 @@
 = Wysiwyg
 
 Simple WYSIWYG plugin with image upload support.
-Based on LWRTE[http://code.google.com/p/lwrte/] 
+Based on LWRTE[http://code.google.com/p/lwrte/]
 and ocupload[http://code.google.com/p/ocupload/].
 
 == Dependencies
@@ -23,7 +23,7 @@ Install the plugin:
 Run the generator:
   script/generate wysiwyg
 
-The generator will create 
+The generator will create
 - a controller: wysiwyg_pictures_controller
 - a wysiwyg_picture route
 - a model: wysiwyg_pictures
@@ -42,7 +42,7 @@ Include the JS and CSS into your views:
 To transform a textarea into a WYSIWYG:
 
   $(document).ready(function(){
-	
+
 	wysiwygSetup({
 		textarea_id:'content_nl_editor',
 		picture_action_url:'/wysiwyg_pictures',
@@ -50,7 +50,7 @@ To transform a textarea into a WYSIWYG:
 		heading_selection: true;
 		width:620
 	});
-	
+
 	wysiwygSetup({
 		textarea_id:'content_fr_editor',
 		all : true
