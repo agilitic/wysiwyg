@@ -1,4 +1,4 @@
-/* lwRTE + lwRTE.tb + occupload + blockUI -- pimped by agilitic 
+/* lwRTE + lwRTE.tb + occupload + blockUI -- pimped by agilitic
  * See bottom for "wysiwygSetup(options)".
  * Released under MIT License. For more information, visit: http://github.com/agilitic/wysiwyg
  */
@@ -10,12 +10,12 @@
 jQuery.fn.rte = function(options, editors) {
 	if(!editors || editors.constructor != Array)
 		editors = new Object();
-		
+
 	$(this).each(function(i) {
 		var id = (this.id) ? this.id : editors.length;
 		editors[id] = new lwRTE (this, options || {});
 	});
-	
+
 	return editors;
 }
 
@@ -39,7 +39,7 @@ var lwRTE = function (textarea, options) {
 	$.extend(this.css, options.css || {});
 
 	if(document.designMode || document.contentEditable) {
-		$(textarea).wrap($('<div></div>').addClass('rte-zone').width(this.width));		
+		$(textarea).wrap($('<div></div>').addClass('rte-zone').width(this.width));
 		this.textarea	= textarea;
 		this.enable_design_mode();
 	}
@@ -67,7 +67,7 @@ lwRTE.prototype.activate_toolbar = function(editor, tb) {
 
 	$(editor).before($(tb).clone(true));
 };
-	
+
 lwRTE.prototype.enable_design_mode = function() {
 	var self = this;
 
@@ -93,9 +93,9 @@ lwRTE.prototype.enable_design_mode = function() {
 
 	$(self.textarea).hide().after(self.iframe).remove();
 	self.textarea	= null;
-	
+
 	var css = '';
-	
+
 	for(var i in self.css)
 		css += "<link type='text/css' rel='stylesheet' href='" + self.css[i] + "' />";
 
@@ -115,8 +115,8 @@ lwRTE.prototype.enable_design_mode = function() {
 	} catch ( e ) {
 		// Will fail on Gecko if the editor is placed in an hidden container element
 		// The design mode will be set ones the editor is focused
-		$(self.iframe_doc).focus(function() { 
-			self.iframe_doc.designMode(); 
+		$(self.iframe_doc).focus(function() {
+			self.iframe_doc.designMode();
 		});
 	}
 
@@ -129,31 +129,31 @@ lwRTE.prototype.enable_design_mode = function() {
 
 	self.activate_toolbar(self.iframe, self.toolbars.rte);
 
-	$(self.iframe).parents('form').submit( 
+	$(self.iframe).parents('form').submit(
 		function() { self.disable_design_mode(true); }
 	);
 
-	$(self.iframe_doc).mouseup(function(event) { 
+	$(self.iframe_doc).mouseup(function(event) {
 		if(self.iframe_doc.selection)
 			self.range = self.iframe_doc.selection.createRange();  //store to restore later(IE fix)
 
-		self.set_selected_controls( (event.target) ? event.target : event.srcElement, self.controls.rte); 
+		self.set_selected_controls( (event.target) ? event.target : event.srcElement, self.controls.rte);
 	});
 
-	$(self.iframe_doc).blur(function(event){ 
-		if(self.iframe_doc.selection) 
+	$(self.iframe_doc).blur(function(event){
+		if(self.iframe_doc.selection)
 			self.range = self.iframe_doc.selection.createRange(); // same fix for IE as above
 	});
 
-	$(self.iframe_doc).keyup(function(event) { 
-		self.set_selected_controls( self.get_selected_element(), self.controls.rte); 
+	$(self.iframe_doc).keyup(function(event) {
+		self.set_selected_controls( self.get_selected_element(), self.controls.rte);
 	});
 
 	// Mozilla CSS styling off
 	if(!$.browser.msie)
 		self.editor_cmd('styleWithCSS', false);
 };
-    
+
 lwRTE.prototype.disable_design_mode = function(submit) {
 	var self = this;
 
@@ -164,10 +164,10 @@ lwRTE.prototype.disable_design_mode = function(submit) {
 
 	if(self.iframe.id)
 		self.textarea.id = self.iframe.id;
-		
+
 	if(self.iframe.title)
 		self.textarea.name = self.iframe.title;
-	
+
 	$(self.textarea).val($('body', self.iframe_doc).html());
 	$(self.iframe).before(self.textarea);
 
@@ -181,13 +181,13 @@ lwRTE.prototype.disable_design_mode = function(submit) {
 		self.activate_toolbar(self.textarea, self.toolbars.html);
 	}
 };
-    
+
 lwRTE.prototype.toolbar_click = function(obj, control) {
 	var fn = control.exec;
 	var args = control.args || [];
-	
+
 	var is_select = (obj.tagName.toUpperCase() == 'SELECT');
-	
+
 	$('.rte-panel', this.get_toolbar()).remove();
 
 	if(fn) {
@@ -210,12 +210,12 @@ lwRTE.prototype.toolbar_click = function(obj, control) {
 		this.editor_cmd(control.command, args);
 	}
 };
-	
+
 lwRTE.prototype.create_toolbar = function(controls) {
 	var self = this;
 	var tb = $("<div></div>").addClass('rte-toolbar').width('100%').append($("<ul></ul>")).append($("<div></div>").addClass('clear'));
 	var obj, li;
-	
+
 	for (var key in controls){
 		if(controls[key].separator) {
 			li = $("<li></li>").addClass('separator');
@@ -226,12 +226,12 @@ lwRTE.prototype.create_toolbar = function(controls) {
 				} catch(e) {
 				}
 			}
-				
+
 			if(controls[key].select) {
 				obj = $(controls[key].select)
 					.change( function(e) {
 						self.event = e;
-						self.toolbar_click(this, controls[this.className]); 
+						self.toolbar_click(this, controls[this.className]);
 						return false;
 					});
 			} else {
@@ -240,7 +240,7 @@ lwRTE.prototype.create_toolbar = function(controls) {
 					.attr('rel', key)
 					.click( function(e) {
 						self.event = e;
-						self.toolbar_click(this, controls[this.rel]); 
+						self.toolbar_click(this, controls[this.rel]);
 						return false;
 					})
 			}
@@ -253,12 +253,12 @@ lwRTE.prototype.create_toolbar = function(controls) {
 
 	$('.enable', tb).click(function() {
 		self.enable_design_mode();
-		return false; 
+		return false;
 	});
 
 	$('.disable', tb).click(function() {
 		self.disable_design_mode();
-		return false; 
+		return false;
 	});
 
 	return tb.get(0);
@@ -275,7 +275,7 @@ lwRTE.prototype.create_panel = function(title, width) {
 	var drag, event;
 	var left = self.event.pageX;
 	var top = self.event.pageY;
-	
+
 	var panel	= $('<div></div>').hide().addClass('rte-panel').css({left: left, top: top});
 	$('<div></div>')
 		.addClass('rte-panel-title')
@@ -284,17 +284,17 @@ lwRTE.prototype.create_panel = function(title, width) {
 		.click( function() { panel.remove(); return false; }))
 		.mousedown( function() { drag = true; return false; })
 		.mouseup( function() { drag = false; return false; })
-		.mousemove( 
+		.mousemove(
 			function(e) {
 				if(drag && event) {
 					left -= event.pageX - e.pageX;
 					top -=  event.pageY - e.pageY;
-					panel.css( {left: left, top: top} ); 
+					panel.css( {left: left, top: top} );
 				}
 
 				event = e;
 				return false;
-			} 
+			}
 		)
 		.appendTo(panel);
 
@@ -318,7 +318,7 @@ lwRTE.prototype.set_selected_controls = function(node, controls) {
 
 	if(!toolbar)
 		return false;
-		
+
 	var key, i_node, obj, control, tag, i, value;
 
 	try {
@@ -359,14 +359,14 @@ lwRTE.prototype.set_selected_controls = function(node, controls) {
 		}
 	} catch(e) {
 	}
-	
+
 	return true;
 };
 
 lwRTE.prototype.get_selected_element = function () {
 	var node, selection, range;
 	var iframe_win	= this.iframe.contentWindow;
-	
+
 	if (iframe_win.getSelection) {
 		try {
 			selection = iframe_win.getSelection();
@@ -392,7 +392,7 @@ lwRTE.prototype.get_selection_range = function() {
 	var rng	= null;
 	var iframe_window = this.iframe.contentWindow;
 	this.iframe.focus();
-	
+
 	if(iframe_window.getSelection) {
 		rng = iframe_window.getSelection().getRangeAt(0);
 		if($.browser.opera) { //v9.63 tested only
@@ -411,7 +411,7 @@ lwRTE.prototype.get_selection_range = function() {
 lwRTE.prototype.get_selected_text = function() {
 	var iframe_win = this.iframe.contentWindow;
 
-	if(iframe_win.getSelection)	
+	if(iframe_win.getSelection)
 		return iframe_win.getSelection().toString();
 
 	this.range.select(); //Restore selection, if IE lost focus.
@@ -427,7 +427,7 @@ lwRTE.prototype.get_selected_html = function() {
 		if(iframe_window.getSelection) {
 			var e = document.createElement('div');
 			e.appendChild(rng.cloneContents());
-			html = e.innerHTML;		
+			html = e.innerHTML;
 		} else {
 			html = rng.htmlText;
 		}
@@ -442,16 +442,16 @@ lwRTE.prototype.selection_replace_with = function(html) {
 
 	if(!rng)
 		return;
-	
+
 	this.editor_cmd('removeFormat'); // we must remove formating or we will get empty format tags!
 
 	if(iframe_window.getSelection) {
 		rng.deleteContents();
-		
+
 		if ($.browser.safari) {
 			rng.insertNode(html);
 		}
-		
+
 		rng.insertNode(rng.createContextualFragment(html));
 		this.editor_cmd('delete');
 	} else {
@@ -472,11 +472,11 @@ function lwrte_style_init(rte) {
 	self.select = '<select><option value="">- no css -</option></select>';
 
 	// load CSS info. javascript only issue is not working correctly, that's why ajax-php :(
-	if(rte.css.length) {	
+	if(rte.css.length) {
 		$.ajax({
-			url: "styles.php", 
+			url: "styles.php",
 			type: "POST",
-			data: { css: rte.css[rte.css.length - 1] }, 
+			data: { css: rte.css[rte.css.length - 1] },
 			async: false,
 			success: function(data) {
 				var list = data.split(',');
@@ -484,7 +484,7 @@ function lwrte_style_init(rte) {
 
 				for(var name in list)
 					select += '<option value="' + list[name] + '">' + list[name] + '</option>';
-	
+
 				self.select = '<select><option value="">- css -</option>' + select + '</select>';
 			}});
 	}
@@ -532,10 +532,10 @@ function lwrte_color(){
 		'#909000', '#900090', '#009090', '#ffffff', '#cccccc',
 		'#ffff00', '#ff00ff', '#00ffff', '#000000', '#eeeeee'
 	];
-			
+
 	for(var i = 0; i < colors.length; i++)
 		$("<div></div>").addClass("item").css('background', colors[i]).appendTo(palette);
-			
+
 	var height = $('#rgb').height();
 	var part_width = $('#rgb').width() / 6;
 
@@ -553,7 +553,7 @@ function lwrte_color(){
 	$('#palette').click( function(e) { compute_color(this, false, false, true, e); return false;} );
 
 	$('#cancel', panel).click( function() { panel.remove(); return false; } );
-	$('#ok', panel).click( 
+	$('#ok', panel).click(
 		function() {
 			var value = color.html();
 
@@ -563,8 +563,8 @@ function lwrte_color(){
 
 				self.editor_cmd('foreColor', value);
 			}
-					
-			panel.remove(); 
+
+			panel.remove();
 			return false;
 		}
 	);
@@ -572,7 +572,7 @@ function lwrte_color(){
 	function to_hex(n) {
 		var s = "0123456789abcdef";
 		return s.charAt(Math.floor(n / 16)) + s.charAt(n % 16);
-	}			
+	}
 
 	function get_abs_pos(element) {
 		var r = { x: element.offsetLeft, y: element.offsetTop };
@@ -585,7 +585,7 @@ function lwrte_color(){
 
 		return r;
 	};
-			
+
 	function get_xy(obj, event) {
 		var x, y;
 		event = event || window.event;
@@ -600,7 +600,7 @@ function lwrte_color(){
 
 		return { x: x, y: y };
 	}
-			
+
 	function compute_color(obj, is_rgb, is_gray, is_palette, e) {
 		var r, g, b, c;
 
@@ -640,7 +640,7 @@ function lwrte_unformat() {
 }
 
 function lwrte_clear() {
-	if(confirm('Clear Document?')) 
+	if(confirm('Clear Document?'))
 		this.set_content('');
 }
 
@@ -657,25 +657,25 @@ function lwrte_link() {
 
 	var url = $('#url', panel);
 
-	$('#ok', panel).click( 
+	$('#ok', panel).click(
 	  function() {
 	    var url = $('#url', panel).val();
 	    var target = $('#target', panel).val() || "";
 	    var title = $('#title', panel).val() || "";
-	
+
 	    if(self.get_selected_text().length <= 0) {
 	      alert('Sélectionnez le texte que vous voulez lier!');
 	      return false;
 	    }
-	
+
 	    panel.remove();
-	
+
 	    if(url.length <= 7) {
 			alert('Veuillez entrer un lien valide');
 			return false;
 		}
 	    self.editor_cmd('unlink');
-	
+
 	    if ($.browser.safari) {
 			var html = '<a href="' + url + '" target="_blank" title="'+title+'" />' + self.get_selected_text() + '</a>';
 			self.editor_cmd("insertHTML", html)
@@ -717,14 +717,14 @@ function lwrte_link() {
 
 		return new $.ocupload(this, options);
 	},
-	
+
 	$.ocupload = function(element, options) {
 		// Fix scope problems
 		var self = this;
-	
+
 		// A unique id so we can find our elements later
 		var id = new Date().getTime().toString().substr(8);
-		
+
 		// Upload Iframe
 		var iframe = $(
 			'<iframe '+
@@ -735,7 +735,7 @@ function lwrte_link() {
 		).css({
 			display: 'none'
 		});
-		
+
 		// Form
 		var form = $(
 			'<form '+
@@ -748,7 +748,7 @@ function lwrte_link() {
 			margin: 0,
 			padding: 0
 		});
-		
+
 		// File Input
 		var input = $(
 			'<input '+
@@ -766,7 +766,7 @@ function lwrte_link() {
 			'border': 0,
 			'font-size': '10em'
 		});
-	
+
 		// Put everything together
 		element.wrap('<li></li>'); //container
 
@@ -785,7 +785,7 @@ function lwrte_link() {
 			'display': 'inline',
 			'border': 0
 		});
-			
+
 		element.after(input);
 		element.parent().parent().after(iframe);
 		form = input.parent().parent(); //FIX for correct submiting
@@ -794,29 +794,29 @@ function lwrte_link() {
 		input.change(function() {
 			// Do something when a file is selected.
 			self.onSelect();
-			
+
 			// Submit the form automaticly after selecting the file
 			if(self.autoSubmit) {
 				self.submit();
 			}
 		});
-		
+
 		// Methods
 		$.extend(this, {
 			autoSubmit: options.autoSubmit,
 			onSubmit: options.onSubmit,
 			onComplete: options.onComplete,
 			onSelect: options.onSelect,
-		
-			// get filename		
+
+			// get filename
 			filename: function() {
 				return input.attr('value');
 			},
-			
+
 			// get/set params
 			params: function(params) {
 				var params = params ? params : false;
-				
+
 				if(params) {
 					options.params = $.extend(options.params, params);
 				}
@@ -824,11 +824,11 @@ function lwrte_link() {
 					return options.params;
 				}
 			},
-			
+
 			// get/set name
 			name: function(name) {
 				var name = name ? name : false;
-				
+
 				if(name) {
 					input.attr('name', value);
 				}
@@ -836,11 +836,11 @@ function lwrte_link() {
 					return input.attr('name');
 				}
 			},
-			
+
 			// get/set action
 			action: function(action) {
 				var action = action ? action : false;
-				
+
 				if(action) {
 					form.attr('action', action);
 				}
@@ -848,11 +848,11 @@ function lwrte_link() {
 					return form.attr('action');
 				}
 			},
-			
+
 			// get/set enctype
 			enctype: function(enctype) {
 				var enctype = enctype ? enctype : false;
-				
+
 				if(enctype) {
 					form.attr('enctype', enctype);
 				}
@@ -860,11 +860,11 @@ function lwrte_link() {
 					return form.attr('enctype');
 				}
 			},
-			
+
 			// set options
 			set: function(obj, value) {
 				var value =	value ? value : false;
-								
+
 				function option(action, value) {
 					switch(action) {
 						default:
@@ -895,18 +895,18 @@ function lwrte_link() {
 							self.onSelect = value;
 							break;
 					}
-				}				
-				
+				}
+
 				if(value) {
 					option(obj, value);
 				}
-				else {				
+				else {
 					$.each(obj, function(key, value) {
 						option(key, value);
 					});
 				}
 			},
-			
+
 			// Submit the form
 			submit: function() {
 				// Do something before we upload
@@ -925,13 +925,13 @@ function lwrte_link() {
 				// Submit the actual form.
 				// In that way, because we don't want jquery events (it fires submit event for other parent form)
 				form.get(0).submit();
-				
+
 				// Do something after we are finished uploading
 				iframe.unbind().load(function() {
 					// Get a response from the server in plain text
 					var myFrame = document.getElementById(iframe.attr('name'));
 					var response = $(myFrame.contentWindow.document.body).text();
-					
+
 					// Do something on complete
 					self.onComplete(response); //done :D
 				});
@@ -981,7 +981,7 @@ $.growlUI = function(title, message, timeout, onClose) {
 	$.blockUI({
 		message: $m, fadeIn: 700, fadeOut: 1000, centerY: false,
 		timeout: timeout, showOverlay: false,
-		onUnblock: onClose, 
+		onUnblock: onClose,
 		css: $.blockUI.defaults.growlCSS
 	});
 };
@@ -1013,9 +1013,9 @@ $.blockUI.defaults = {
 
 	title: null,	  // title string; only used when theme == true
 	draggable: true,  // only used when theme == true (requires jquery-ui.js to be loaded)
-	
+
 	theme: false, // set to true to use with jQuery UI themes
-	
+
 	// styles for the message when blocking; if you wish to disable
 	// these and use an external stylesheet then do this in your code:
 	// $.blockUI.defaults.css = {};
@@ -1031,7 +1031,7 @@ $.blockUI.defaults = {
 		backgroundColor:'#fff',
 		cursor:		'wait'
 	},
-	
+
 	// minimal style set used when themes are used
 	themedCSS: {
 		width:	'30%',
@@ -1061,7 +1061,7 @@ $.blockUI.defaults = {
 		'-webkit-border-radius': '10px',
 		'-moz-border-radius':	 '10px'
 	},
-	
+
 	// IE issues: 'about:blank' fails on HTTPS and javascript:false is s-l-o-w
 	// (hat tip to Jorge H. N. de Vasconcelos)
 	iframeSrc: /^https/i.test(window.location.href || '') ? 'javascript:false' : 'about:blank',
@@ -1156,11 +1156,11 @@ function install(el, opts) {
 	// layer2 is the overlay layer which has opacity and a wait cursor (by default)
 	// layer3 is the message content that is displayed while blocking
 
-	var lyr1 = ($.browser.msie || opts.forceIframe) 
+	var lyr1 = ($.browser.msie || opts.forceIframe)
 		? $('<iframe class="blockUI" style="z-index:'+ (z++) +';display:none;border:none;margin:0;padding:0;position:absolute;width:100%;height:100%;top:0;left:0" src="'+opts.iframeSrc+'"></iframe>')
 		: $('<div class="blockUI" style="display:none"></div>');
 	var lyr2 = $('<div class="blockUI blockOverlay" style="z-index:'+ (z++) +';display:none;border:none;margin:0;padding:0;width:100%;height:100%;top:0;left:0"></div>');
-	
+
 	var lyr3;
 	if (opts.theme && full) {
 		var s = '<div class="blockUI blockMsg blockPage ui-dialog ui-widget ui-corner-all" style="z-index:'+z+';display:none;position:fixed">' +
@@ -1172,7 +1172,7 @@ function install(el, opts) {
 	else {
 		lyr3 = full ? $('<div class="blockUI blockMsg blockPage" style="z-index:'+z+';display:none;position:fixed"></div>')
 					: $('<div class="blockUI blockMsg blockElement" style="z-index:'+z+';display:none;position:absolute"></div>');
-	}						   
+	}
 
 	// if we have a message, style it
 	if (msg) {
@@ -1180,7 +1180,7 @@ function install(el, opts) {
 			lyr3.css(themedCSS);
 			lyr3.addClass('ui-widget-content');
 		}
-		else 
+		else
 			lyr3.css(css);
 	}
 
@@ -1194,7 +1194,7 @@ function install(el, opts) {
 		lyr1.css('opacity',0.0);
 
 	$([lyr1[0],lyr2[0],lyr3[0]]).appendTo(full ? 'body' : el);
-	
+
 	if (opts.theme && opts.draggable && $.fn.draggable) {
 		lyr3.draggable({
 			handle: '.ui-dialog-titlebar',
@@ -1298,7 +1298,7 @@ function remove(el, opts) {
 	}
 	opts = $.extend({}, $.blockUI.defaults, opts || {});
 	bind(0, el, opts); // unbind events
-	
+
 	var els;
 	if (full) // crazy selector to handle odd field errors in ie6/7
 		els = $('body').children().filter('.blockUI').add('body > .blockUI');
@@ -1347,7 +1347,7 @@ function bind(b, el, opts) {
 		$el.data('blockUI.isBlocked', b);
 
 	// don't bind events when overlay is not in use or if bindEvents is false
-	if (!opts.bindEvents || (b && !opts.showOverlay)) 
+	if (!opts.bindEvents || (b && !opts.showOverlay))
 		return;
 
 	// bind anchors and inputs for mouse and key events
@@ -1432,10 +1432,10 @@ function wysiwygSetup(w_options){
 		italic			: {command: 'italic', tags:['i', 'em']},
 		strikeThrough	: {command: 'strikethrough', tags: ['s', 'strike'] },
 		underline		: {command: 'underline', tags: ['u']}
-	};			
+	};
 	// Options
 	if(w_options.color_selection  || w_options.all) {
-		rte_toolbar.sep_color = {separator: true };		
+		rte_toolbar.sep_color = {separator: true };
 		rte_toolbar.color = {exec: lwrte_color};
 	}
 	if(w_options.link_buttons || w_options.all) {
@@ -1447,13 +1447,13 @@ function wysiwygSetup(w_options){
 		rte_toolbar.sep_indent = {separator: true };
 		rte_toolbar.indent = {command: 'indent'};
 		rte_toolbar.outdent	= {command: 'outdent'};
-	}	
+	}
 	if(w_options.itemize_buttons  || w_options.all) {
-		rte_toolbar.sep_itemize = {separator: true };		
+		rte_toolbar.sep_itemize = {separator: true };
 		rte_toolbar.unorderedList = {command: 'insertunorderedlist', tags: ['ul'] };
 	}
 	if(w_options.heading_selection  || w_options.all) {
-		rte_toolbar.sep_heading = {separator: true };		
+		rte_toolbar.sep_heading = {separator: true };
 		rte_toolbar.heading = {command: 'formatblock', select: '\
 			<select>\
 				<option value="<p>">Normal</option>\
@@ -1479,7 +1479,7 @@ function wysiwygSetup(w_options){
 			</select>', tags: ['font']};
 	}
 	if(w_options.size_selection  || w_options.all) {
-		rte_toolbar.sep_size = {separator: true };		
+		rte_toolbar.sep_size = {separator: true };
 		rte_toolbar.siez = {command: 'fontsize', select: '\
 			<select>\
 				<option value="">-</option>\
@@ -1493,7 +1493,7 @@ function wysiwygSetup(w_options){
 			</select>', tags: ['font']};
 	}
 	// END OPTIONS
-	
+
 	// Creates the actual wysiwyg
 	$('#' + w_options.textarea_id).rte({
 		element_id : w_options.textarea_id,
@@ -1501,9 +1501,9 @@ function wysiwygSetup(w_options){
 		controls_rte: rte_toolbar,
 		controls_html: html_toolbar
 	}, wysiwyg);
-	
-	
-	// Image upload	
+
+
+	// Image upload
 	if(w_options.picture_action_url){
 		// add an image link to the wysiwyg menu bar
 		var link_id = "link_image_" + w_options.textarea_id;
@@ -1532,5 +1532,5 @@ function wysiwygSetup(w_options){
 				this.submit();
 			}
 		});
-	}	
+	}
 }
